@@ -2,18 +2,19 @@
     <div id="toDoApp">
         <app-image-slider></app-image-slider>
         <ul class="list-group task-list">
-            <li class="list-group-item task-li" 
-                v-for="(task, index) in taskList" :key="index"> 
+            <transition-group name="slide">
+                <li class="list-group-item task-li" 
+                    v-for="(task, index) in taskList" :key="task"> 
 
-                <input type="checkbox" class="checkmark" v-model="task.check" true-value="yes" false-value="no">
-                <span class="task-line" 
-                    :style="[task.check === 'no' ? {'text-decoration':'none'} : {'text-decoration':'line-through', 'color':'#718093'}]">
-                        {{ task.description }} 
-                </span>
+                    <input type="checkbox" class="checkmark" v-model="task.check" true-value="yes" false-value="no">
+                    <span class="task-line" 
+                        :style="[task.check === 'no' ? {'text-decoration':'none'} : {'text-decoration':'line-through', 'color':'#718093'}]">
+                            {{ task.description }} 
+                    </span>
 
-                <button @click="removeTask(index)" class="remove-button">♻️</button>
-
-            </li>
+                    <button @click="removeTask(index)" class="remove-button">♻️</button>
+                </li>
+            </transition-group>
         </ul>
 
         <div class="textarea-zone">
@@ -175,6 +176,46 @@ export default {
   left: 3px;
   height: 11px;
   width: 11px;
+}
+
+.slide-enter {
+    opacity: 0;
+}
+
+.slide-enter-active {
+    animation: slide-in ease-out forwards;
+    transition: opacity .5s;
+}
+
+
+
+.slide-leave-active {
+    animation: slide-out 1s ease-out forwards;
+    transition: opacity 1s;
+    opacity: 0;
+    position: absolute;
+}
+
+.slide-move {
+    transition: transform 1s;
+}
+
+@keyframes slide-in {
+    from {
+        transform: translateY(20px);
+    }
+    to {
+        transform: translateY(0)
+    }
+}
+
+@keyframes slide-out {
+    from {
+        transform: translateY(0)
+    }
+    to {
+        transform: translateY(20px);
+    }
 }
 
 @keyframes rotate {
